@@ -1,0 +1,10 @@
+1. We highly recommend using a python virtual environment to install and use angr. 
+  #安装virtualenv
+  ···
+  (sudo) pip install virtualenv
+  ···
+
+  #安装virtualenvwrapper
+  ···
+  (sudo) pip install virtualenvwrapper
+  ···
