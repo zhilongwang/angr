@@ -46,3 +46,28 @@ Read the code of angr
   ```bash
   (sudo) pip install angr
   ```
+ ### 5. problem you may encounter
+  # need libffi
+  ```bash
+  wget ftp://sourceware.org/pub/libffi/libffi-3.2.1.tar.gz
+  tar -zxvf libffi-3.2.1.tar.gz 
+  ./configure
+  make
+  sudo make install
+  ```
+  
+  # need glib-2.0
+  ```bash
+  sudo apt-get install libglib2.0-dev
+  ```
+  # unrecognized command line option '-std=c++11'
+  ```bash
+  sudo add-apt-repository ppa:ubuntu-toolchain-r/test     sudo apt-get update;   
+  sudo apt-get install gcc-4.8 g++-4.8     
+  sudo update-alternatives --remove-all gcc   
+  sudo update-alternatives --remove-all g++  
+  sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.8 20  
+  sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.8 20  
+  sudo update-alternatives --config gcc  
+  sudo update-alternatives --config g++ 
+  ```
