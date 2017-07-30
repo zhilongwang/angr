@@ -71,6 +71,7 @@ Read the code of angr
   sudo update-alternatives --config gcc  
   sudo update-alternatives --config g++ 
   ```
+  
   #IOError: [Errno 2] No such file or directory: '/usr/local/lib/python2.7/dist-packages/angr/analyses/identifier/../example_flag_page'
     1.download example_flag_page from https://github.com/angr/angr/raw/master/angr/analyses/example_flag_page
     2.mv it to the dir.
