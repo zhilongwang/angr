@@ -1,7 +1,7 @@
 # 1. We highly recommend using a python virtual environment to install and use angr. 
   #安装virtualenv
  
-  python uroboros.py bzip
+  
   (sudo) pip install virtualenv
 
 
