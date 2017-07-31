@@ -69,8 +69,8 @@ Read the code of angr
   sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.8 20  
   sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.8 20  
   sudo update-alternatives --config gcc  
-  sudo update-alternatives --config g++ 
-  ```
+  sudo update-alternatives --config g++   
+  ```
   
   #IOError: [Errno 2] No such file or directory: '/usr/local/lib/python2.7/dist-packages/angr/analyses/identifier/../example_flag_page'
     
