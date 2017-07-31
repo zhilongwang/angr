@@ -2,7 +2,7 @@
 
 ### project   
 
-  #### new project
+  #### --new project
   ```python
   b = angr.Project('/bin/true')
   b.arch #architecture
@@ -10,7 +10,7 @@
   b.filname
   b.loader #load address
   ```
-  #### loader
+  #### --loader
   ```python
   b.loader.shared_objects #this is a dictionary of the objects that are loaded as part of loading the binary
   b.loader.memory[b.loader.min_addr()] #this is the memory space of the process after being loaded.
@@ -23,7 +23,7 @@
   ```
 
 ### factory
-   #### Provides access to important analysis elements such as path groups and symbolic execution results.
+   #### --Provides access to important analysis elements such as path groups and symbolic execution results.
    ```python  
    proj.factory.successors() #Perform execution using any applicable engine. Return a SimSuccessors object classifying the results of the run.
    proj.factory.blank_state() #Returns a mostly-uninitialized state object
@@ -35,11 +35,11 @@
    ```
 ### state  
   
-   #### Get state
+   #### --Get state
    ```python
    state=proj.factory.entry_state()
    ```
-   #### state info
+   #### --state info
    ```python
    state.memory.load(b.loader.min_addr(), 5) #memory access
    state.regs.sp #access register
