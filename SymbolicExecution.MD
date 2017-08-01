@@ -1,13 +1,13 @@
 # Symbolic Execution - Surveyors
 &nbsp;&nbsp;&nbsp;&nbsp;At heart, angr is a symbolic execution engine.
 
-## &nbsp;&nbsp;Surveyor 
+## &nbsp;&nbsp;1.Surveyor 
 &nbsp;&nbsp;&nbsp;&nbsp;Surveyor are an old API that is rather unwieldy.It's recommended to use PathGroups instead.  
-## &nbsp;&nbsp;PathGroups  
+## &nbsp;&nbsp;2.PathGroups  
 &nbsp;&nbsp;&nbsp;&nbsp;Path groups are just a bunch of paths being executed at once. 
 
-### &nbsp;&nbsp; Some basic examples of pathgroups capabilities.  
-
+### &nbsp;&nbsp; Some basic examples of pathgroups capabilities.    
+ 
    ```python
    import angr
    p = angr.Project('examples/fauxware/fauxware', load_options={'auto_load_libs': False})
@@ -36,4 +36,40 @@
    "rax: <BV64 0x37>"
    assert path.state.se.any_int(path.state.regs.rip) == path.addr  # regs are BitVectors
    ```
-   
+## &nbsp;&nbsp;3.PathGroup.Explorer() 
+&nbsp;&nbsp;&nbsp;&nbsp;Pathgroups are supposed to replace surveyors.Explorer, being more clever and efficient.   
+
+   ``` python
+    ## crackme0x00a is at: https://github.com/angr/angr-doc/raw/master/examples/CSCI-4968-MBE/challenges/crackme0x00a/crackme0x00a
+    import angr
+
+    FIND_ADDR = 0x08048533 # mov dword [esp], str.Congrats_ ; [0x8048654:4]=0x676e6f43 LEA str.Congrats_ ; "Congrats!" @ 0x8048654
+    AVOID_ADDR = 0x08048554 # mov dword [esp], str.Wrong_ ; [0x804865e:4]=0x6e6f7257 LEA str.Wrong_ ; "Wrong!" @ 0x804865e
+
+
+    def main():
+        proj = angr.Project('crackme0x00a', load_options={"auto_load_libs": False})
+        pg = proj.factory.path_group()
+
+        ### case one
+        pg.explore(find=FIND_ADDR, avoid=AVOID_ADDR)
+        return pg.found[0].state.posix.dumps(0).split('\0')[0] # stdin
+        ### case two
+        pg.explore(find=lambda p: "Congrats" in p.state.posix.dumps(1))
+        s = pg.found[0].state
+        print s.posix.dumps(1)
+        flag = s.posix.dumps(0)
+        print(flag)
+        ###
+
+    def test():
+        assert main() == 'g00dJ0B!'
+
+    if __name__ == '__main__':
+        print(main())  
+   ```  
+&nbsp;&nbsp;&nbsp;&nbsp;p.state.posix.dumps(1) is the str() of output.  
+&nbsp;&nbsp;&nbsp;&nbsp;p.state.posix.dumps(0) is the str() of input.
+
+## &nbsp;&nbsp;4.Stash types  
+&nbsp;&nbsp;&nbsp;&nbsp;https://docs.angr.io/docs/pathgroups.html
