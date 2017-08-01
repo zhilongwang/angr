@@ -2,12 +2,12 @@
 
 ###  auto_load_libs
 
-   ####  By default, CLE will attempt to load all the dependencies of the main binary, unless
+   ####  --By default, CLE will attempt to load all the dependencies of the main binary, unless
    ```python
    b = angr.Project("/bin/true", load_options=dict(auto_load_libs=False))
    ```
 ###  Loading Options  
-   #### CLE expects a dict as a set of parameters.  
+   #### --CLE expects a dict as a set of parameters.  
 
    ```python
    load_options = {'main_opts':{options0}, 'lib_opts': {libname1:{options1}, path2:{options2}, ...}}
@@ -19,7 +19,7 @@
     load_options['lib_opts'][path1] = {k1:v1, k2:v2, ...}
     load_options['lib_opts'][path2] = {k1:v1, k2:v2, ...}
    ```
-   #### Valid options  
+   #### --Valid options  
    ```python
    load_options = {}
 
@@ -52,4 +52,4 @@
    ```
 
 ###  Symlolic analysis:function summaries  
-##### https://docs.angr.io/docs/loading.html
+##### --https://docs.angr.io/docs/loading.html
