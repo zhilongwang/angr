@@ -2,7 +2,7 @@
 
 ### project   
 
-  #### --new project
+  #### &nbsp;&nbsp;new project
   ```python
   b = angr.Project('/bin/true')
   b.arch #architecture
@@ -10,7 +10,7 @@
   b.filname
   b.loader #load address
   ```
-  #### --loader
+  #### &nbsp;&nbsp;loader
   ```python
   b.loader.shared_objects #this is a dictionary of the objects that are loaded as part of loading the binary
   b.loader.memory[b.loader.min_addr()] #this is the memory space of the process after being loaded.
@@ -21,25 +21,34 @@
   b.loader.main_bin.memory #this is a dict of the memory contents of *just* the main binary
   b.loader.shared_objects['libc.so.6'].imports #this is a dict (name->ELFRelocation) of imports required by the libc which was loaded
   ```
+### analyses  
+  #### &nbsp;&nbsp; Analysis the binary and get CFG, DFG, VFG, Slice, and so on.
+  ```python
+  b = angr.Project('/bin/true')
+  cfg=b.analyses.CFG(fail_fast=True)
+  ```
+### surveyors
+  #### &nbsp;&nbsp;Surveyors are basic tools for performing symbolic execution with common goals.
 
 ### factory
-   #### --Provides access to important analysis elements such as path groups and symbolic execution results.
+   #### &nbsp;&nbsp;Provides access to important analysis elements such as path groups and symbolic execution results.It is merely a home for all the functions that produce new instances of important angr classes and should be sitting on Project.
    ```python  
-   proj.factory.successors() #Perform execution using any applicable engine. Return a SimSuccessors object classifying the results of the run.
-   proj.factory.blank_state() #Returns a mostly-uninitialized state object
-   proj.factory.entry_state() #Returns a state object representing the program at its entry point.
-   proj.factory.full_init_state() #Very much like entry_state(), except that instead of starting execution at the program entry point, execution begins at a special SimProcedure that plays the role of the dynamic loader, calling each of the initializer functions that should be called before execution reaches the entry point.
-   proj.factory.call_state() #Returns a state object initialized to the start of a given function, as if it were called with given parameters.
-   proj.factory.path() 
-   proj.factory.path_group()
+   import claripy
+   block = b.factory.block(addr=b.entry)
+   block = b.factory.block(addr=b.entry, byte_string='\xc3')
+   block = b.factory.block(addr=b.entry, num_inst=1)
+
+   state = b.factory.blank_state(addr=b.entry)
+   state = b.factory.entry_state(args=['./program', claripy.BVS('arg1', 20*8)])
+   state = b.factory.call_state(0x1000, "hello", "world")
    ```
 ### state  
   
-   #### --Get state
+   #### &nbsp;&nbsp;Get state
    ```python
    state=proj.factory.entry_state()
    ```
-   #### --state info
+   #### &nbsp;&nbsp;state info
    ```python
    state.memory.load(b.loader.min_addr(), 5) #memory access
    state.regs.sp #access register
