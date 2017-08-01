@@ -73,3 +73,7 @@
 
 ## &nbsp;&nbsp;4.Stash types  
 &nbsp;&nbsp;&nbsp;&nbsp;https://docs.angr.io/docs/pathgroups.html
+
+
+### &nbsp;&nbsp; path_group.move
+&nbsp;&nbsp;&nbsp;&nbsp;You can move paths between stashes by using the path_group.move function. This function accepts many options to control which paths are moved between which stashes.
