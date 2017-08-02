@@ -77,8 +77,9 @@ Read the code of angr
     ```bash
     1.wget https://github.com/angr/angr/raw/master/angr/analyses/example_flag_page
     2.mv example_flag_page /...[analyses].
-    ```
-    #IOError: Exception: "dot" not found in path.
+    ```  
+    
+  #IOError: Exception: "dot" not found in path.
     
     ```bash
     sudo apt-get install graphviz
