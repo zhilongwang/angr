@@ -76,4 +76,6 @@
 
 
 ### &nbsp;&nbsp; path_group.move
-&nbsp;&nbsp;&nbsp;&nbsp;You can move paths between stashes by using the path_group.move function. This function accepts many options to control which paths are moved between which stashes.
+&nbsp;&nbsp;&nbsp;&nbsp;You can move paths between stashes by using the path_group.move function. This function accepts many options to control which paths are moved between which stashes.  
+## &nbsp;&nbsp;4.PathGroup.step()  
+### &nbsp;&nbsp;&nbsp;&nbsp; 
