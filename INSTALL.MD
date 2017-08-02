@@ -72,15 +72,14 @@ Read the code of angr
   sudo update-alternatives --config g++   
   ```
   
-  #IOError: [Errno 2] No such file or directory: '/usr/local/lib/python2.7/dist-packages/angr/analyses/identifier/../example_flag_page'
+  #IOError: [Errno 2] No such file or directory: '/usr/local/lib/python2.7/dist-packages/angr/analyses/identifier/../example_flag_page'  
     
     ```bash
     1.wget https://github.com/angr/angr/raw/master/angr/analyses/example_flag_page
     2.mv example_flag_page /...[analyses].
-    ```  
-    
-  #IOError: Exception: "dot" not found in path.
-    
-    ```bash
-    sudo apt-get install graphviz
-    ```
+    ```   
+
+  #IOError: Exception: "dot" not found in path. 
+  ```bash
+  sudo apt-get install graphviz
+  ```
