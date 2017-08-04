@@ -31,12 +31,12 @@ END_LEGAL */
 
 /* ===================================================================== */
 /*
-  @ORIGINAL_AUTHOR: Robert Muth
+  @ORIGINAL_AUTHOR: 
 */
 
 /* ===================================================================== */
 /*! @file
- *  This file contains an ISA-portable PIN tool for tracing instructions
+ *  This file contains an ISA-portable PIN tool for tracing BaseBlock and callee
  */
 
 #include "pin.H"
