@@ -62,7 +62,8 @@ Read the code of angr
   ```
   #unrecognized command line option '-std=c++11'
   ```bash
-  sudo add-apt-repository ppa:ubuntu-toolchain-r/test     sudo apt-get update;   
+  sudo add-apt-repository ppa:ubuntu-toolchain-r/test     
+  sudo apt-get update;   
   sudo apt-get install gcc-4.8 g++-4.8     
   sudo update-alternatives --remove-all gcc   
   sudo update-alternatives --remove-all g++  
