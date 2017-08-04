@@ -35,6 +35,12 @@
    print('rax: {0}'.format(path.state.regs.rax))
    "rax: <BV64 0x37>"
    assert path.state.se.any_int(path.state.regs.rip) == path.addr  # regs are BitVectors
+   ```  
+
+   ```python
+   # Run a quick execution!
+   pg = project.factory.path_group()
+   pg.run()  # step until no more active paths
    ```
 ## &nbsp;&nbsp;3.PathGroup.Explorer() 
 &nbsp;&nbsp;&nbsp;&nbsp;Pathgroups are supposed to replace surveyors.Explorer, being more clever and efficient.   
@@ -77,5 +83,14 @@
 
 ### &nbsp;&nbsp; path_group.move
 &nbsp;&nbsp;&nbsp;&nbsp;You can move paths between stashes by using the path_group.move function. This function accepts many options to control which paths are moved between which stashes.  
-## &nbsp;&nbsp;4.PathGroup.step()  
-### &nbsp;&nbsp;&nbsp;&nbsp; 
+## &nbsp;&nbsp;4.PathGroup.step()   
+
+&nbsp;&nbsp;&nbsp;&nbsp; 1.End user calls step()
+
+&nbsp;&nbsp;&nbsp;&nbsp; 2.step() calls _one_step()
+
+&nbsp;&nbsp;&nbsp;&nbsp; 3._one_step() pops a single exploration technique from the list of active step exploration technique callbacks, and calls it with the path group we are operating on
+
+&nbsp;&nbsp;&nbsp;&nbsp; 4.This callback calls step() on the path group that it gets called with
+
+&nbsp;&nbsp;&nbsp;&nbsp; 5.This process repeats until there are no more callbacks
