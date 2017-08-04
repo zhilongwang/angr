@@ -46,7 +46,7 @@ Read the code of angr
   ```bash
   (sudo) pip install angr-utils
   ```
- ### 5. problem you may encounter
+ ### 5. problems you may encounter
   #need libffi
   ```bash
   wget ftp://sourceware.org/pub/libffi/libffi-3.2.1.tar.gz
@@ -62,7 +62,8 @@ Read the code of angr
   ```
   #unrecognized command line option '-std=c++11'
   ```bash
-  sudo add-apt-repository ppa:ubuntu-toolchain-r/test     sudo apt-get update;   
+  sudo add-apt-repository ppa:ubuntu-toolchain-r/test     
+  sudo apt-get update;   
   sudo apt-get install gcc-4.8 g++-4.8     
   sudo update-alternatives --remove-all gcc   
   sudo update-alternatives --remove-all g++  
