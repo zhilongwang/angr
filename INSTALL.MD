@@ -46,7 +46,7 @@ Read the code of angr
   ```bash
   (sudo) pip install angr-utils
   ```
- ### 5. problem you may encounter
+ ### 5. problems you may encounter
   #need libffi
   ```bash
   wget ftp://sourceware.org/pub/libffi/libffi-3.2.1.tar.gz
