@@ -1,8 +1,6 @@
 # Symbolic Simuvex-Data Type  
 
 
-
-
    ```python
    #This helps with getting instances of type objects
     import simuvex
