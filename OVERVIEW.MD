@@ -66,4 +66,6 @@
    state.regs.ip #ditto
    state.scratch.tmp_expr(0) #access the temps
    state.posix.dumps(1) # information about the operating system or environment model
-   ```
+   state.addr #entry address
+   state.addr_trace[-1] #address back trace
+   ```
