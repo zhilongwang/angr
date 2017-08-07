@@ -25,5 +25,5 @@
    ```  
 
 ## &nbsp;&nbsp;2.SimProcedure and Hook 
-&nbsp;&nbsp;&nbsp;&nbsp;1. **SimProcedure** is a simuvex class that describes a set of actions to take on a state. Its crux is the run() method.  
-&nbsp;&nbsp;&nbsp;&nbsp;2. **Hook** is an angr class that holds a SimProcedure along with information about how to instantiate it.
+&nbsp;&nbsp;&nbsp;&nbsp;1. **SimProcedure** is a simuvex class that describes a set of actions to take on a state. Its crux is the run() method. SimProcedures (symbolic summaries) is used to replace external calls to libraries' functions. auto_load_libs and use_sim_procedures options are useful when there is no such summary for given function.
+&nbsp;&nbsp;&nbsp;&nbsp;2. **Hook** is an angr class that holds a SimProcedure along with information about how to instantiate it. Hook function is invoked when reaching target function. symbolic execution would execute the hook function instead of the original one.
