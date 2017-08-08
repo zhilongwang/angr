@@ -52,10 +52,9 @@ std::ofstream TraceFile;
 /* ===================================================================== */
 
 KNOB<string> KnobOutputFile(KNOB_MODE_WRITEONCE, "pintool", "o", "trace.out", "specify trace file name");
-KNOB<BOOL>   KnobPrintArgs(KNOB_MODE_WRITEONCE, "pintool", "a", "0", "print call arguments ");
 //KNOB<BOOL>   KnobPrintArgs(KNOB_MODE_WRITEONCE, "pintool", "i", "0", "mark indirect calls ");
 UINT32 count_trace = 0; // current trace number
-bool outflag=true;
+bool outflag=false;
 bool call_flag=false;
 bool ret_flag=false;
 const string Trace_begin_fun="main";
@@ -96,25 +95,7 @@ const string *Target2String(ADDRINT target)
 
 
 }
-/* ===================================================================== */
 
-VOID  do_call_args(const string *s, ADDRINT arg0)
-{
-    TraceFile << *s << "(" << arg0 << ",...)" << endl;
-}
-
-/* ===================================================================== */
-
-VOID  do_call_args_indirect(ADDRINT target, BOOL taken, ADDRINT arg0)
-{
-    if( !taken ) return;
-    
-    const string *s = Target2String(target);
-    do_call_args(s, arg0);
-
-    if (s != &invalid)
-        delete s;
-}
 
 /* ===================================================================== */
 
@@ -151,8 +132,11 @@ VOID  do_call_indirect(ADDRINT target, BOOL taken)
 /* ===================================================================== */
 VOID  do_ret(UINT32 insAddr,ADDRINT target)
 {
+	//Out2file(Target2String(insAddr));
+    	if(Trace_begin_fun.compare(*(Target2String(insAddr)))==0){
+		outflag=false;
+	}
 	if(ret_flag){
-		
 	    const string s = "[RET_D]"+*ADDRINT2str(insAddr)+"\t"+*Target2String(target);
 	    Out2file(&s);
 	}
@@ -160,17 +144,24 @@ VOID  do_ret(UINT32 insAddr,ADDRINT target)
 }
 
 /* ===================================================================== */
-VOID  docount(const string *s)
+VOID  docount(const string *s,ADDRINT ins_addr)
 {
-    
-    Out2file(s);
+    	//Out2file(Target2String(ins_addr));
+	const string* funname=Target2String(ins_addr);
+    	if(Trace_begin_fun.compare(*(funname))==0){
+		outflag=true;
+	}else if(funname->find("@plt")!=string::npos){
+		Out2file(new string("[C2LIB]"+*ADDRINT2str(ins_addr)+"\t"+*funname));
+		outflag=false;
+	}
+    	Out2file(s);
 }
 
 /* ===================================================================== */
 
 VOID Trace(TRACE trace, VOID *v)
 {
-    const BOOL print_args = KnobPrintArgs.Value();
+  
     const string funname="main";//baseblock trace the function
         
     for (BBL bbl = TRACE_BblHead(trace); BBL_Valid(bbl); bbl = BBL_Next(bbl))
@@ -185,7 +176,7 @@ VOID Trace(TRACE trace, VOID *v)
 			
 			string *s = new string("[B_ENT]"+*ADDRINT2str(ins_addr)+"\t%" + INS_Disassemble(ins));
 			INS_InsertCall(BBL_InsTail(bbl), IPOINT_BEFORE, AFUNPTR(docount),
-					   IARG_PTR, s,
+					   IARG_PTR, s, IARG_ADDRINT, ins_addr,
 					   IARG_END);	
 		}
 		
@@ -223,17 +214,11 @@ VOID Trace(TRACE trace, VOID *v)
             // also track stup jumps into share libraries
             if( RTN_Valid(rtn) && !INS_IsDirectBranchOrCall(tail) && ".plt" == SEC_Name( RTN_Sec( rtn ) ))
             {
-                if( print_args )
-                {
-                    INS_InsertCall(tail, IPOINT_BEFORE, AFUNPTR(do_call_args_indirect),
-                                   IARG_BRANCH_TARGET_ADDR, IARG_BRANCH_TAKEN,  IARG_G_ARG0_CALLER, IARG_END);
-                }
-                else
-                {
-                    INS_InsertCall(tail, IPOINT_BEFORE, AFUNPTR(do_call_indirect),
+                
+                
+		INS_InsertCall(tail, IPOINT_BEFORE, AFUNPTR(do_call_indirect),
                                    IARG_BRANCH_TARGET_ADDR, IARG_BRANCH_TAKEN, IARG_END);
 
-                }
             }
         }
         
