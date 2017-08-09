@@ -73,8 +73,8 @@ def main():
 	'''
 	for step in p.trace:
 		print(step)
-	print(p.state.posix.dumps(0))
-	print(p.state.se.constraints)
+	print(p.state.posix.dumps(0)) #this can give you concret input values
+	print(p.state.se.constraints) #this can give you the input constraints
 	return
 
 
