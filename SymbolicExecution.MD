@@ -94,3 +94,19 @@
 &nbsp;&nbsp;&nbsp;&nbsp; 4.This callback calls step() on the path group that it gets called with
 
 &nbsp;&nbsp;&nbsp;&nbsp; 5.This process repeats until there are no more callbacks
+
+## &nbsp;&nbsp;5.Simulateion Managers(simgr)
+
+&nbsp;&nbsp;&nbsp;&nbsp; https://github.com/angr/angr-doc/blob/master/docs/toplevel.md  
+   ```python
+   simgr = proj.factory.simgr(state) # TODO: change name before merge
+   <SimulationManager with 1 active>
+   simgr.active
+   [<SimState @ 0x401670>]
+
+   simgr.step()
+    simgr.active
+    [<SimState @ 0x1020300>]
+    simgr.active[0].regs.rip   # new and exciting!
+    <BV64 0x1020300>
+   ```

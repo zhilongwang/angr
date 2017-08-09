@@ -68,4 +68,7 @@
    state.posix.dumps(1) # information about the operating system or environment model
    state.addr #entry address
    state.addr_trace[-1] #address back trace
-   ```
+ ```  
+
+### 6.Constraint Solving   
+https://github.com/angr/angr-doc/blob/master/docs/solver.md
