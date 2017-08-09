@@ -66,11 +66,15 @@ def main():
 					print("success entry[%d]:%x" % (1,sucs_entry))
 					p=pg[j]	
 					break
+	'''
 	p=p.step()[0]
-
-	#print path
 	for k in range(len(p.addr_trace.hardcopy)):
 		print("0x%x" % p.addr_trace.hardcopy[k])
+	'''
+	for step in p.trace:
+		print(step)
+	print(p.state.posix.dumps(0))
+	print(p.state.se.constraints)
 	return
 
 
