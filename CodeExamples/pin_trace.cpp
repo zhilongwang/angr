@@ -1,12 +1,10 @@
 /*BEGIN_LEGAL 
 Intel Open Source License 
-
 Copyright (c) 2002-2015 Intel Corporation. All rights reserved.
  
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
 met:
-
 Redistributions of source code must retain the above copyright notice,
 this list of conditions and the following disclaimer.  Redistributions
 in binary form must reproduce the above copyright notice, this list of
@@ -53,11 +51,13 @@ std::ofstream TraceFile;
 /* Commandline Switches */
 /* ===================================================================== */
 
-KNOB<string> KnobOutputFile(KNOB_MODE_WRITEONCE, "pintool", "o", "calltrace.out", "specify trace file name");
-KNOB<BOOL>   KnobPrintArgs(KNOB_MODE_WRITEONCE, "pintool", "a", "0", "print call arguments ");
+KNOB<string> KnobOutputFile(KNOB_MODE_WRITEONCE, "pintool", "o", "trace.out", "specify trace file name");
 //KNOB<BOOL>   KnobPrintArgs(KNOB_MODE_WRITEONCE, "pintool", "i", "0", "mark indirect calls ");
 UINT32 count_trace = 0; // current trace number
-
+bool outflag=false;
+bool call_flag=false;
+bool ret_flag=false;
+const string Trace_begin_fun="main";
 
 /* ===================================================================== */
 /* Print Help Message                                                    */
@@ -73,6 +73,18 @@ INT32 Usage()
 string invalid = "invalid_rtn";
 
 /* ===================================================================== */
+void Out2file(const string *s){
+	if(outflag){
+ 		TraceFile << *s << endl;
+	}
+}
+/* ===================================================================== */
+string *ADDRINT2str(ADDRINT value){
+	char str[16];
+    	sprintf(str,"%x",(unsigned int)value);
+	return new string(str);
+}
+/* ===================================================================== */
 const string *Target2String(ADDRINT target)
 {
     string name = RTN_FindNameByAddress(target);
@@ -80,27 +92,10 @@ const string *Target2String(ADDRINT target)
         return &invalid;
     else
         return new string(name);
+
+
 }
 
-/* ===================================================================== */
-
-VOID  do_call_args(const string *s, ADDRINT arg0)
-{
-    TraceFile << *s << "(" << arg0 << ",...)" << endl;
-}
-
-/* ===================================================================== */
-
-VOID  do_call_args_indirect(ADDRINT target, BOOL taken, ADDRINT arg0)
-{
-    if( !taken ) return;
-    
-    const string *s = Target2String(target);
-    do_call_args(s, arg0);
-
-    if (s != &invalid)
-        delete s;
-}
 
 /* ===================================================================== */
 
@@ -109,7 +104,18 @@ VOID  do_call(const string *s)
     TraceFile << *s << endl;
 
 }
+/* ===================================================================== */
 
+VOID  my_call(const string *s,ADDRINT target)
+{	
+	
+	if(call_flag){
+	    const string fileout="[CALLF]"+*ADDRINT2str(target)+"\t"+*s;
+	    Out2file(&fileout);
+	}
+
+
+}
 /* ===================================================================== */
 
 VOID  do_call_indirect(ADDRINT target, BOOL taken)
@@ -117,7 +123,7 @@ VOID  do_call_indirect(ADDRINT target, BOOL taken)
     if( !taken ) return;
 
     const string *s = Target2String(target);
-    do_call( s );
+    my_call( s, target );
     
     if (s != &invalid)
         delete s;
@@ -126,90 +132,70 @@ VOID  do_call_indirect(ADDRINT target, BOOL taken)
 /* ===================================================================== */
 VOID  do_ret(UINT32 insAddr,ADDRINT target)
 {
-    const string *s = Target2String(target);
-    TraceFile << std::hex << "insAddr:" << insAddr<<"\t";
-    TraceFile << "Ret to:"<<*s << endl;
+	//Out2file(Target2String(insAddr));
+    	if(Trace_begin_fun.compare(*(Target2String(insAddr)))==0){
+		outflag=false;
+	}
+	if(ret_flag){
+	    const string s = "[RET_D]"+*ADDRINT2str(insAddr)+"\t"+*Target2String(target);
+	    Out2file(&s);
+	}
     
 }
 
 /* ===================================================================== */
-VOID  docount(const string *s)
+VOID  docount(const string *s,ADDRINT ins_addr)
 {
-    TraceFile.write(s->c_str(), s->size());
-    
+    	//Out2file(Target2String(ins_addr));
+	const string* funname=Target2String(ins_addr);
+    	if(Trace_begin_fun.compare(*(funname))==0){
+		outflag=true;
+	}else if(funname->find("@plt")!=string::npos){
+		Out2file(new string("[C2LIB]"+*ADDRINT2str(ins_addr)+"\t"+*funname));
+		outflag=false;
+	}
+    	Out2file(s);
 }
 
 /* ===================================================================== */
 
 VOID Trace(TRACE trace, VOID *v)
 {
-    const BOOL print_args = KnobPrintArgs.Value();
+  
     const string funname="main";//baseblock trace the function
         
     for (BBL bbl = TRACE_BblHead(trace); BBL_Valid(bbl); bbl = BBL_Next(bbl))
     {	
-	char str[16];
+	
 	
         INS tail = BBL_InsTail(bbl);
-	const ADDRINT target = INS_Address(tail);
-	if(funname.compare(*(Target2String(target)))==0){
-		string traceString = "";
-		for ( INS ins = BBL_InsHead(bbl); INS_Valid(ins); ins = INS_Next(ins))
-		{
-		    sprintf(str,"%x",INS_Address(ins));
-		    traceString +=   str  ;
-		    traceString +=   "\t%" + INS_Disassemble(ins) + "\n";
+	if(true){
+		INS ins = BBL_InsHead(bbl);
+		ADDRINT ins_addr=INS_Address(ins);
+		if(ins_addr/0x1000==0x400){
+			
+			string *s = new string("[B_ENT]"+*ADDRINT2str(ins_addr)+"\t%" + INS_Disassemble(ins));
+			INS_InsertCall(BBL_InsTail(bbl), IPOINT_BEFORE, AFUNPTR(docount),
+					   IARG_PTR, s, IARG_ADDRINT, ins_addr,
+					   IARG_END);	
 		}
-
-		// Identify traces with an id
-		    count_trace++;
-
-		    // Write the actual trace once at instrumentation time
-		    string m = "@" + decstr(count_trace) + "\n";
-		    TraceFile.write(m.c_str(), m.size());            
-		    TraceFile.write(traceString.c_str(), traceString.size());
-		    
-		    
-		    // at run time, just print the id
-		    string *s = new string(decstr(count_trace) + "\n");
-		    INS_InsertCall(BBL_InsTail(bbl), IPOINT_BEFORE, AFUNPTR(docount),
-			           IARG_PTR, s,
-			           IARG_END);
-
-
+		
 	}
-        
         if( INS_IsCall(tail) )
         {
             if( INS_IsDirectBranchOrCall(tail) )
             {
                 const ADDRINT target = INS_DirectBranchOrCallTargetAddress(tail);
-                if( print_args )
-                {
-                    INS_InsertPredicatedCall(tail, IPOINT_BEFORE, AFUNPTR(do_call_args),
-                                             IARG_PTR, Target2String(target), IARG_G_ARG0_CALLER, IARG_END);
-                }
-                else
-                {
-                    INS_InsertPredicatedCall(tail, IPOINT_BEFORE, AFUNPTR(do_call),
-                                             IARG_PTR, Target2String(target), IARG_END);
-                }
+                INS_InsertPredicatedCall(tail, IPOINT_BEFORE, AFUNPTR(my_call),
+                                             IARG_PTR, Target2String		(target),IARG_ADDRINT, target, IARG_END);
+               
                 
             }
             else
             {
-                if( print_args )
-                {
-                    INS_InsertCall(tail, IPOINT_BEFORE, AFUNPTR(do_call_args_indirect),
-                                   IARG_BRANCH_TARGET_ADDR, IARG_BRANCH_TAKEN,  IARG_G_ARG0_CALLER, IARG_END);
-                }
-                else
-                {
-                    INS_InsertCall(tail, IPOINT_BEFORE, AFUNPTR(do_call_indirect),
+                 INS_InsertCall(tail, IPOINT_BEFORE, AFUNPTR(do_call_indirect),
                                    IARG_END);
-                }
-                
-                
+               
             }
         }
 	else if( INS_IsRet(tail) )
@@ -228,17 +214,11 @@ VOID Trace(TRACE trace, VOID *v)
             // also track stup jumps into share libraries
             if( RTN_Valid(rtn) && !INS_IsDirectBranchOrCall(tail) && ".plt" == SEC_Name( RTN_Sec( rtn ) ))
             {
-                if( print_args )
-                {
-                    INS_InsertCall(tail, IPOINT_BEFORE, AFUNPTR(do_call_args_indirect),
-                                   IARG_BRANCH_TARGET_ADDR, IARG_BRANCH_TAKEN,  IARG_G_ARG0_CALLER, IARG_END);
-                }
-                else
-                {
-                    INS_InsertCall(tail, IPOINT_BEFORE, AFUNPTR(do_call_indirect),
+                
+                
+		INS_InsertCall(tail, IPOINT_BEFORE, AFUNPTR(do_call_indirect),
                                    IARG_BRANCH_TARGET_ADDR, IARG_BRANCH_TAKEN, IARG_END);
 
-                }
             }
         }
         
@@ -275,7 +255,7 @@ int  main(int argc, char *argv[])
     TraceFile.setf(ios::showbase);
     
     string trace_header = string("#\n"
-                                 "# Call Trace Generated By Pin\n"
+                                 "# Trace Generated By Pin\n"
                                  "#\n");
     
 
