@@ -6,13 +6,16 @@
 
   #### &nbsp;&nbsp;call trace of run into simulate funcion.
   ```python
-  path.step()-->
-  self._make_successors()-->
-  factory.successors()-->
-  engines.process()-->
-  SimEngineProcedure.procedure()-->
-  engine.process()-->
-  simuvex.procedure.libc___so___6.__isoc99_scanf.__isoc99_scanf()
+  angr/path.py/step()
+  angr/path.py/_make_successors()
+  angr/factory/successors
+  engines.process
+  simuvex/engines/procedure/SimEngineProcedure.procedure
+  simuvex/engines/engine.py.process
+  simuvex/engines/procedure._process
+  simuvex.procedures.libc___so___6.__isoc99_scanf.__isoc99_scanf
+  
+  path.py-->factory-->engines-->successors-->__isoc99_scanf-->s_format-->s_type
   ```
 
 #### &nbsp;&nbsp;__isoc99_scanf.
