@@ -20,9 +20,10 @@
     :ivar unicorn:      Control of the Unicorn Engine
     """
    ```
- ## &nbsp;&nbsp; functool.wraps 函数装饰/函数预处理
-   &nbsp;&nbsp;&nbsp;&nbsp; http://www.wklken.me/posts/2013/08/18/python-extra-functools.html
-   ```python
+ ## &nbsp;&nbsp; functool.wraps 函数装饰/函数预处理   
+   &nbsp;&nbsp;&nbsp;&nbsp; http://www.wklken.me/posts/2013/08/18/python-extra-functools.html   
+   ```python   
+   
   def arch_overrideable(f):
     @functools.wraps(f)
     def wrapped_f(self, *args, **kwargs):
@@ -32,9 +33,10 @@
         else:
             return f(self, *args, **kwargs)
     return wrapped_f
+    
    ```
   ## &nbsp;&nbsp; add_constraints
-   &nbsp;&nbsp;&nbsp;&nbsp; Add some constraints to the state.
+   &nbsp;&nbsp;&nbsp;&nbsp; Add some constraints to the state.  
    ```python
     def add_constraints(self, *args, **kwargs):
         """
