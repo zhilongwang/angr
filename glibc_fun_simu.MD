@@ -354,8 +354,11 @@ def _process(self, state, successors, procedure, ret_to=None):
         if self.cc: kwargs['cc'] = self.cc
         return self.procedure(*args, **kwargs)
   ```
+### 8.__isoc99_scanf
+ &nbsp;&nbsp;simuvex.procedures.libc.system
 
-#### &nbsp;&nbsp;__isoc99_scanf.
+ #### &nbsp;&nbsp;run()    
+
   ```python
 from simuvex.s_format import FormatParser
 from simuvex.s_type import SimTypeInt, SimTypeString
