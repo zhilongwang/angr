@@ -1,5 +1,5 @@
 #### FormatParser
-&nbsp;&nbsp;simuvex.parseformat  
+&nbsp;&nbsp;simuvex.parseformat  <div id="Inter-Page"></div>
 
   ```python
       def _parse(self, fmt_idx):
@@ -46,4 +46,4 @@
 
         return fmt_str
   ```    
-<div id="Inter-Page"></div>
+
