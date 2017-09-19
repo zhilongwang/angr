@@ -390,7 +390,7 @@ class __isoc99_scanf(FormatParser):
         return items
   ```
   link:
-  ###### [FormatParser._parse()](#https://github.com/njuwangzhilong/angr/blob/master/AngrCodeRead/FormatString.MD#_parse) 
+  ###### [FormatParser._parse()](https://github.com/njuwangzhilong/angr/blob/master/AngrCodeRead/FormatString.MD#_parse) 
   ###### [fmt_str.interpret(](http://blog.csdn.net/guodongxiaren) 
   ###### [FormatParser._parse()](http://blog.csdn.net/guodongxiaren) 
 
