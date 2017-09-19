@@ -1,4 +1,4 @@
-## Discription of simulate of glibc function in symblic execution
+## Discription of step() into glibc function in symblic execution
   
 ### 1.How symblic execution run into plt   
 
@@ -6,16 +6,16 @@
 
   #### &nbsp;&nbsp;call trace of run into simulate funcion.
   ```python
-  angr/path.py/step()
-  angr/path.py/_make_successors()
-  angr/factory/successors
-  engines.process
-  simuvex/engines/procedure/SimEngineProcedure.procedure
-  simuvex/engines/engine.py.process
-  simuvex/engines/procedure._process
-  simuvex.procedures.libc___so___6.__isoc99_scanf.__isoc99_scanf
-  
-  path.py-->factory-->engines-->successors-->__isoc99_scanf-->s_format-->s_type
+  angr/Path/step()
+  angr/Path/_make_successors()
+  angr/AngrObjectFactory/successors()
+  angr/SimEngineHook/process()
+  simuvex/SimEngineProcedure/process()
+  simuvex/SimEngine/process()
+  simuvex/SimEngine/_process()
+  angr/SimEngineHook/_process()
+  simuvex/SimEngineProcedure/_process()
+  simuvex/procedures/libc___so___6.__isoc99_scanf/__isoc99_scanf.run()
   ```
 ### 2.Path   
 &nbsp;&nbsp;angr.path
