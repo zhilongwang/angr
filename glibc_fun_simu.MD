@@ -17,10 +17,9 @@
   
   path.py-->factory-->engines-->successors-->__isoc99_scanf-->s_format-->s_type
   ```
-### 1.path.py   
-
-  #### &nbsp;&nbsp;
-  #### &nbsp;&nbsp;
+### 2.Path   
+&nbsp;&nbsp;angr.path
+  #### &nbsp;&nbsp;step()
   ```python
   
     #
@@ -77,7 +76,284 @@
         return out
 
   ```
+  #### &nbsp;&nbsp;_make_successors()   
+  ```python
+   def _make_successors(self, throw=None):
+	print("Debug:In angr/path.py/_make_successors()")
+        self._run = None
+        self._run_error = None
+        self._run_traceback = None
+        try:
+	       #************************************8
+            self._run = self._project.factory.successors(self.state, **self._run_args)
 
+        except (AngrError, simuvex.SimError, claripy.ClaripyError) as e:
+            l.debug("Catching exception", exc_info=True)
+            self._run_error = e
+            self._run_traceback = sys.exc_info()[2]
+            if throw:
+                raise
+        except (TypeError, ValueError, ArithmeticError, MemoryError) as e:
+            l.debug("Catching exception", exc_info=True)
+            self._run_error = e
+            self._run_traceback = sys.exc_info()[2]
+            if throw:
+                raise
+  ```
+  
+### 3.AngrObjectFactory
+ &nbsp;&nbsp;angr.factory
+
+  #### &nbsp;&nbsp;Perform execution using any applicable engine. Enumerate the current engines and use the first one that works. Return a SimSuccessors object classifying the results of the run.
+  
+  ```python
+  def successors(self, state,
+            addr=None,
+            jumpkind=None,
+            inline=False,
+            default_engine=False,
+            engines=None,
+            **kwargs):
+        """
+        Perform execution using any applicable engine. Enumerate the current engines and use the
+        first one that works. Return a SimSuccessors object classifying the results of the run.
+
+        :param state:           The state to analyze
+        :param addr:            optional, an address to execute at instead of the state's ip
+        :param jumpkind:        optional, the jumpkind of the previous exit
+        :param inline:          This is an inline execution. Do not bother copying the state.
+        :param default_engine:  Whether we should only attempt to use the default engine (usually VEX)
+        :param engines:         A list of engines to try to use, instead of the default.
+
+        Additional keyword arguments will be passed directly into each engine's process method.
+        """
+	print("Debug:in angr/factory/successors")
+        if default_engine:
+            engines = [self.default_engine]
+        if engines is None:
+            engines = self.engines
+
+        if addr is not None or jumpkind is not None:
+            state = state.copy()
+            if addr is not None:
+                state.ip = addr
+            if jumpkind is not None:
+                state.scratch.jumpkind = jumpkind
+
+        r = None
+        for engine in engines:
+            if engine.check(state, inline=inline, **kwargs):
+                #***************************8/
+                
+                r = engine.process(state, inline=inline,**kwargs)
+
+                if r.processed:
+                    break
+     
+        if r is None or not r.processed:
+            raise AngrExitError("All engines failed to execute!")
+
+        # Peek and fix the IP for syscalls
+        if r.successors and r.successors[0].scratch.jumpkind.startswith('Ijk_Sys'):
+            self._fix_syscall_ip(r.successors[0])
+
+        return r   
+  ```
+
+### 4.SimEngineHook
+ &nbsp;&nbsp;angr.engines 
+ &nbsp;&nbsp; SimEngineHook is the subclass of SimEngineProcedure
+  #### &nbsp;&nbsp;process()
+  ```python
+  def process(self, state,
+            procedure=None,
+            ret_to=None,
+            inline=None,
+            force_addr=None, **kwargs):
+        """
+        Perform execution with a state.
+
+        :param state:       The state with which to execute
+        :param procedure:   An instance of a SimProcedure to run, optional
+        :param ret_to:      The address to return to when this procedure is finished
+        :param inline:      This is an inline execution. Do not bother copying the state.
+        :param force_addr:  Force execution to pretend that we're working at this concrete address
+        :returns:           A SimSuccessors object categorizing the execution's successor states
+        """
+	print("Debug:in engines.process")
+	
+        return super(SimEngineHook, self).process(state, procedure,
+                ret_to=ret_to,
+                inline=inline,
+                force_addr=force_addr)
+  ```
+  ### 6.SimEngineProcedure
+ &nbsp;&nbsp;simuvex.engines.procedure 
+ &nbsp;&nbsp;SimEngineProcedure is subclass of SimEngine
+  #### &nbsp;&nbsp;process()   
+  
+  ```python  
+ def process(self, state, procedure,
+            ret_to=None,
+            inline=None,
+            force_addr=None,
+            **kwargs):
+        """
+        Perform execution with a state.
+
+        :param state:       The state with which to execute
+        :param procedure:   An instance of a SimProcedure to run
+        :param ret_to:      The address to return to when this procedure is finished
+        :param inline:      This is an inline execution. Do not bother copying the state.
+        :param force_addr:  Force execution to pretend that we're working at this concrete address
+        :returns:           A SimSuccessors object categorizing the execution's successor states
+        """
+        print("Debug:in simuvex/engines/procedure/SimEngineProcedure.procedure")
+	
+        return super(SimEngineProcedure, self).process(state, procedure,
+                ret_to=ret_to,
+                inline=inline,
+                force_addr=force_addr)   
+		
+  ```  
+ ### 7.SimEngine
+ &nbsp;&nbsp;simuvex.engines.engine
+ 
+   #### &nbsp;&nbsp;process()   
+  
+  ```python  
+ def process(self, state, *args, **kwargs):
+        """
+        Perform execution with a state.
+
+        You should only override this method in a subclass in order to provide the correct method signature and
+        docstring. You should override the ``_process`` method to do your actual execution.
+
+        :param state:       The state with which to execute. This state will be copied before
+                            modification.
+        :param inline:      This is an inline execution. Do not bother copying the state.
+        :param force_addr:  Force execution to pretend that we're working at this concrete address
+        :returns:           A SimSuccessors object categorizing the execution's successor states
+        """
+        print("Debug:in simuvex/engines/engine.py.process")
+        inline = kwargs.pop('inline', False)
+        force_addr = kwargs.pop('force_addr', None)
+        addr = state.se.any_int(state._ip) if force_addr is None else force_addr
+
+        # make a copy of the initial state for actual processing, if needed
+        if not inline and o.COW_STATES in state.options:
+            new_state = state.copy()
+        else:
+            new_state = state
+	
+        # clear the log (unless we're inlining)
+        if not inline:
+            new_state.log.clear()
+            new_state.scratch.clear()
+            new_state.scratch.bbl_addr = addr
+
+        successors = SimSuccessors(addr, state)
+
+        self._process(new_state, successors, *args, **kwargs)
+      
+        return successors
+	
+  ```  
+  #### &nbsp;&nbsp;_process()   
+  
+  ```python  
+ def _process(self, new_state, successors, *args, **kwargs):
+        raise NotImplementedError 
+		
+  ```  
+ ### 8.SimEngineProcedure
+ &nbsp;&nbsp;simuvex.engines.procedure 
+ &nbsp;&nbsp;SimEngineProcedure is subclass of SimEngine, and supperclass of SimEnginHook
+ #### &nbsp;&nbsp;_process()    
+  
+  ```python  
+def _process(self, state, successors, procedure, ret_to=None):
+        
+        print("Debug:in simuvex/engines/procedure._process")
+        successors.sort = 'SimProcedure'
+        successors.description = 'SimProcedure ' + procedure.display_name
+        if procedure.is_syscall:
+            successors.description += ' (syscall)'
+
+        # fill in artifacts
+        successors.artifacts['is_syscall'] = procedure.is_syscall
+        successors.artifacts['procedure'] = procedure
+        successors.artifacts['name'] = procedure.display_name
+        successors.artifacts['no_ret'] = procedure.NO_RET
+        successors.artifacts['adds_exits'] = procedure.ADDS_EXITS
+
+        # Update state.scratch
+        state.scratch.sim_procedure = procedure
+        state.scratch.executed_block_count = 1
+
+        # prepare and run!
+        state._inspect('simprocedure',
+                       BP_BEFORE,
+                       simprocedure_name=procedure.display_name,
+                       simprocedure_addr=successors.addr
+                       )
+
+        if procedure.is_syscall:
+            state._inspect('syscall', BP_BEFORE, syscall_name=procedure.display_name)
+
+        cleanup_options = o.AUTO_REFS not in state.options
+        if cleanup_options:
+            state.options.add(o.AST_DEPS)
+            state.options.add(o.AUTO_REFS)
+
+        # do it
+        #print("Debug: in simuvex/engines/engine.py.process constraints_len %d" % len(state.se.constraints))
+        #constaint is add in the following code.
+        procedure.execute(state, successors, ret_to=ret_to)
+        #print("Debug: in simuvex/engines/engine.py.process constraints_len %d" % len(state.se.constraints))
+        print(procedure.__class__)
+        if cleanup_options:
+            state.options.discard(o.AST_DEPS)
+            state.options.discard(o.AUTO_REFS)
+
+        if procedure.is_syscall:
+            state._inspect('syscall', BP_AFTER, syscall_name=procedure.display_name)
+        state._inspect('simprocedure',
+                       BP_AFTER,
+                       simprocedure_name=procedure.display_name,
+                       simprocedure_addr=successors.addr
+                       )
+
+        successors.processed = True
+		
+  ```  
+### 9.Hook
+ &nbsp;&nbsp;angr.project
+
+    An object describing an action to be taken at a given address instead of executing binary code.
+    An instance of this class may be passed to `angr.Project.hook` along with the address at which
+    to hook.
+
+    More specifically, a hook is a wrapper for a SimProcedure, a simuvex object that contains a lot
+    of logic for how to mutate a state in common ways. The SimProcedure base class is subclassed
+    to produce a SimProcedure that may be used for hooking. If the SimProcedure class is too heavy
+    for your use case, there is a class method `wrap` on this class that can be used to wrap a
+    simple function into a SimProcedure, and then further into a `Hook` directly.
+
+    This class is a bit of a hack to deal with t
+    
+    he fact that SimProcedures need to hold state but
+    having them do so makes them not thread-safe.
+
+#### &nbsp;&nbsp;instantiate()   
+  ```python
+    def instantiate(self, *args, **kwargs):
+        kwargs['sim_kwargs'] = self.kwargs
+        kwargs['is_continuation'] = self.is_continuation
+        kwargs['continuation_addr'] = self._continuation_addr
+        if self.cc: kwargs['cc'] = self.cc
+        return self.procedure(*args, **kwargs)
+  ```
 
 #### &nbsp;&nbsp;__isoc99_scanf.
   ```python
@@ -110,4 +386,4 @@ class __isoc99_scanf(FormatParser):
 
         return items
   ```
-### 2. 
+
