@@ -5,8 +5,8 @@
   #### &nbsp;&nbsp;simuvex.plugins.sybolic_memory | Concretizing symbolic length. Much sad; think about implementing.
 
   #### &nbsp;&nbsp;call trace of run into simulate funcion.
-  ```python
-  angr/Path/step()
+ 
+  [angr/Path/step()](#1)
   angr/Path/_make_successors()
   angr/AngrObjectFactory/successors()
   angr/SimEngineHook/process()
@@ -16,10 +16,10 @@
   angr/SimEngineHook/_process()
   simuvex/SimEngineProcedure/_process()
   simuvex/procedures/libc___so___6.__isoc99_scanf/__isoc99_scanf.run()
-  ```
+ 
 ### 2.Path   
 &nbsp;&nbsp;angr.path
-  #### &nbsp;&nbsp;step()
+  #### &nbsp;&nbsp;<h2 id="1">step()</h2>
   ```python
   
     #
@@ -374,8 +374,8 @@ class __isoc99_scanf(FormatParser):
 
         self.argument_types = {0: self.ty_ptr(SimTypeString())}
         self.return_type = SimTypeInt(self.state.arch.bits, True)
-
-        fmt_str = self._parse(0)
+	
+        fmt_str = self._parse(0)
 
         # we're reading from stdin so the region is the file's content
         f = self.state.posix.get_file(0)
@@ -389,4 +389,8 @@ class __isoc99_scanf(FormatParser):
 
         return items
   ```
+  link:
+  ###### [FormatParser._parse()](http://blog.csdn.net/guodongxiaren) 
+  ###### [fmt_str.interpret(](http://blog.csdn.net/guodongxiaren) 
+  ###### [FormatParser._parse()](http://blog.csdn.net/guodongxiaren) 
 
