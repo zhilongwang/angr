@@ -1,5 +1,6 @@
 #### FormatParser
-&nbsp;&nbsp;simuvex.parseformat
+&nbsp;&nbsp;simuvex.parseformat  
+<span id="_parse">_parse</span>
   ```python
       def _parse(self, fmt_idx):
         """
