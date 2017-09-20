@@ -46,4 +46,48 @@
 
         return fmt_str
   ```    
+  
+#### FormatParser
+&nbsp;&nbsp;_get_fmt()  <div id="Inter-Page"></div>
+  ```python   
+  
+def _get_fmt(self, fmt):
+        """
+        Extract the actual formats from the format string `fmt`.
 
+        :param list fmt: A list of format chars.
+        :returns: a FormatString object
+        """
+
+        # iterate over the format string looking for format specifiers
+        components = [ ]
+        i = 0
+        while i < len(fmt):
+            if type(fmt[i]) is str and fmt[i] == "%":
+                # Note that we only support concrete format specifiers
+                # grab the specifier
+                # go to the space
+                specifier = ""
+                for c in fmt[i+1:]:
+                    if type(c) is str:
+                        specifier += c
+                    else:
+                        break
+
+                specifier = self._match_spec(specifier)
+                if specifier is not None:
+                    i += len(specifier)
+                    components.append(specifier)
+                else:
+                    # if we get here we didn't match any specs, the first char will be thrown away
+                    # and we'll add the percent
+                    i += 1
+                    components.append('%')
+            else:
+                # claripy ASTs, which are usually symbolic variables
+                # They will be kept as they are - even if those chars can be evaluated to "%"
+                components.append(fmt[i])
+            i += 1
+
+        return FormatString(self, components)
+  ```
