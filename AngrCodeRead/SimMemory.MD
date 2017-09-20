@@ -1,6 +1,6 @@
-##SimMemory
-&nbsp;&nbsp;simuvex.storage.memory
-####store()   <div id="store"></div>  
+ ## SimMemory
+ &nbsp;&nbsp;simuvex.storage.memory        
+ #### store()   <div id="store"></div>  
 
   ```python    
   
