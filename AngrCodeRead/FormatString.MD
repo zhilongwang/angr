@@ -114,14 +114,14 @@ def _get_fmt(self, fmt):
         failed = self.parser.state.se.BVV(0, bits)
         argpos = startpos 
         position = addr
-        print("Debug: in simuvex/engines/engine.py.process constraints_len %d" % len(self.parser.state.se.constraints))
+        #print("Debug: in simuvex/engines/engine.py.process constraints_len %d" % len(self.parser.state.se.constraints))
         for component in self.components:
             if isinstance(component, str):
                 # TODO we skip non-format-specifiers in format string interpretation for now
                 # if the region doesn't match the concrete component, we need to return immediately
                 pass
             else:
-                print(component)
+                #print(component)
                 fmt_spec = component
                 try:
                     dest = args(argpos)
@@ -189,5 +189,5 @@ def _get_fmt(self, fmt):
         return (position, ((argpos - startpos) - failed))
  ```
 
-link:
+link:     
 [self.parser.state.memory.store](https://github.com/njuwangzhilong/angr/blob/master/AngrCodeRead/SimMemory.MD/#store)
