@@ -48,7 +48,8 @@
   ```    
   
 #### FormatParser
-&nbsp;&nbsp;_get_fmt()  <div id="Inter-Page"></div>
+&nbsp;&nbsp;_get_fmt()   
+
   ```python   
   
 def _get_fmt(self, fmt):
