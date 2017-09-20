@@ -389,8 +389,8 @@ class __isoc99_scanf(FormatParser):
 
         return items
   ```
-  link:   
-  ###### [FormatParser._parse()](https://github.com/njuwangzhilong/angr/blob/master/AngrCodeRead/FormatString.MD/#Inter-Page) 
-  ###### [fmt_str.interpret(](http://blog.csdn.net/guodongxiaren) 
-  ###### [FormatParser._parse()](http://blog.csdn.net/guodongxiaren) 
+  link:      
+  [FormatParser._parse()](https://github.com/njuwangzhilong/angr/blob/master/AngrCodeRead/FormatString.MD/#Inter-Page) 
+  [Simulation and Instrumentation](https://github.com/angr/angr-doc/blob/master/docs/simulation.md) 
+
 
