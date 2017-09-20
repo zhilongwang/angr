@@ -188,3 +188,6 @@ def _get_fmt(self, fmt):
         # new position is used for interpreting from a file, so we can increase file position
         return (position, ((argpos - startpos) - failed))
  ```
+
+link:
+[self.parser.state.memory.store](https://github.com/njuwangzhilong/angr/blob/master/AngrCodeRead/SimMemory.MD/#store)
