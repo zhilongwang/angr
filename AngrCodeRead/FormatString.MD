@@ -50,7 +50,7 @@
 #### FormatParser
 &nbsp;&nbsp;_get_fmt()   
 
-  ```python   
+ ```python   
   
 def _get_fmt(self, fmt):
         """
