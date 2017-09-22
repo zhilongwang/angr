@@ -4,7 +4,7 @@
 ## &nbsp;&nbsp;1.Surveyor 
 &nbsp;&nbsp;&nbsp;&nbsp;Surveyor are an old API that is rather unwieldy.It's recommended to use PathGroups instead.  
 ## &nbsp;&nbsp;2.PathGroups  
-&nbsp;&nbsp;&nbsp;&nbsp;Path groups are just a bunch of paths being executed at once. 
+&nbsp;&nbsp;&nbsp;&nbsp;Path groups are just a bunch of paths being executed at once.  It is necessary to metion that pathgroups has already been deprecated. Simulations Managers is the substitute.  
 
 ### &nbsp;&nbsp; Some basic examples of pathgroups capabilities.    
  
