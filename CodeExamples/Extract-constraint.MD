@@ -178,4 +178,4 @@ if __name__ == "__main__":
 	main()
   ```
 ### Results
-<img src="https://github.com/njuwangzhilong/angr/blob/master/CodeExamples/photo/rerun.PNG" width = "500" height = "100" alt="first run" />
+<img src="https://github.com/njuwangzhilong/angr/blob/master/CodeExamples/photo/rerun.PNG" width = "500" height = "100" alt="rerun run" />
