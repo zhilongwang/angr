@@ -205,7 +205,7 @@ def get_value(key,defValue=None):
         return defValue
   ```   
 ## 4.Modification of method interpret in class FormatString    
-&nbsp;&nbsp;&nbsp;&nbsp;Method interpret is used to interpret the format string of scanf() and add new symbolic variables according to parameter type.
+&nbsp;&nbsp;&nbsp;&nbsp;Method interpret is used to interpret the format string of scanf() and add new symbolic variables according to parameter type. We add some codes to add constraints.
   ```python   
 def interpret(self, addr, startpos, args, region=None):
         """
