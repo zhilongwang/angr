@@ -112,7 +112,7 @@ if __name__ == "__main__":
 
   ```
 ### Results
-<img src="https://github.com/njuwangzhilong/angr/blob/master/CodeExamples/photo/firstrun.PNG" width = "500" height = "100" alt="first run" />   
+<img src="https://github.com/njuwangzhilong/angr/blob/master/CodeExamples/photo/firstrun.PNG" width = "800" height = "150" alt="first run" />   
 
 ## 2.Re-run binary  
 
@@ -183,7 +183,7 @@ if __name__ == "__main__":
   ```   
 
 ### Results   
-  <img src="https://github.com/njuwangzhilong/angr/blob/master/CodeExamples/photo/rerun.PNG" width = "500" height = "100" alt="rerun run" />
+  <img src="https://github.com/njuwangzhilong/angr/blob/master/CodeExamples/photo/rerun.PNG" width = "800" height = "150" alt="rerun run" />
 
 
 ## 3.Class varcontainer    
