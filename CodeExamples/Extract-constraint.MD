@@ -307,3 +307,6 @@ def interpret(self, addr, startpos, args, region=None):
         # new position is used for interpreting from a file, so we can increase file position
         return (position, ((argpos - startpos) - failed))
   ``` 
+
+## For more information.   
+&nbsp;&nbsp;&nbsp;&nbsp;Ref: [How angr step() into simulative scanf()](https://github.com/njuwangzhilong/angr/blob/master/glibc_fun_simu.MD)
