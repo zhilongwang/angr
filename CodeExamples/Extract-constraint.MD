@@ -34,8 +34,15 @@ def load_trace():
 	return res
 def main():
 	#init global vars
-	varcontainer._init() #varcontainer is public class that I add for the convenience of executing the constraints append codes in angr's internal module. You can see part 3 for  more information.
-	varcontainer.set_value("runcount",0) #the global flag "runcount" is used in simuvex/s_format.py, value zero means it's the first run. value one means it's re-run. 
+	varcontainer._init() 
+	"""varcontainer is public class that I add for the convenience of 
+	executing the constraints append codes in angr's internal module. 
+	You can see part 3 for  more information.
+	"""
+	varcontainer.set_value("runcount",0) 
+	"""the global flag "runcount" is used in simuvex/s_format.py,
+	 value zero means it's the first run. value one means it's re-run. 
+	"""
 	print(varcontainer.get_value('runcount'))
 	# read in base block trace
 	trace_log = load_trace()
@@ -130,14 +137,9 @@ def main():
 	# read constraints objects
 	filename= 'constraint.out'
 	with open(filename, 'r') as f:
-		constraints = pickle.load(f)   # read constraints file and build constraints object
-
-
-		'''
-		for constraint in p.state.se.constraints:
-			print(constraint)
-		'''
-
+		# read constraints file and build constraints object
+		constraints = pickle.load(f)   
+		
 		
 		#re-run  
 		print("***********************re-run the binary**************************")
