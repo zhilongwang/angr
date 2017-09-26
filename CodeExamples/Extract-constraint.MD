@@ -159,17 +159,17 @@ def main():
 			
 			pg=p.step() 		#execute one step(one baseblock),and get pathgroup 	
 			print(len(pg[0].state.se.constraints))
-			sg=p.successors 	#get the state group
-			sucs_num=len(sg)      	#get the lenth of state group
+			sg=p.successors 	#get the group of satisfied successor
+			sucs_num=len(sg)      	#get the length of state group
 			print("The path has", sucs_num, "successors!")
 			print(pg)             	#print the path group
-			if sg[0].addr==0x00 :
+			if sg[0].addr==0x00 :   #As you can above, when set entry point, I push 0x00 into stack, a return to address 0x00  means that execution exits the main()'s stack frame. We will terminal the symbolic execution.
 				break;
-			for j in range(sucs_num):
+			for j in range(sucs_num):   #this will loop once.
 				sucs_entry=sg[j].addr
 				print("success entry[%d]:%x" % (1,sucs_entry))
-				p=pg[j]	
-				break
+				p=pg[j]	 #get the first successor.
+				break    #in toy program, every branch only has one satisfied successor, so we just break in the first loop
 
 		#print the execute trace
 		for step in p.trace:
